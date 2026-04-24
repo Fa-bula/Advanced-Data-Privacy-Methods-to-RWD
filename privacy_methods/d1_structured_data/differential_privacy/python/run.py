@@ -17,11 +17,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 import argparse
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 import json
 
-from mean import do_mean
+from descriptive import do_mean, do_count
 from common import write_benchmark_result
 
 logging.basicConfig(
@@ -44,12 +44,18 @@ def parse_args() -> argparse.Namespace:
 
     subparsers = parser.add_subparsers(dest="cmd", required=True)
 
-    p_descriptive = subparsers.add_parser("mean", parents=[parent], help="Differential Private Mean value")
+    p_descriptive = subparsers.add_parser("mean", parents=[parent], help="Differential private mean value")
     p_descriptive.add_argument("--variable", required=True, type=str, help="Variable to compute the descriptive statistic for.")
     p_descriptive.add_argument("--bounds", required=True, nargs=2, type=float, help="Public bounds for the descriptive statistic.")
     p_descriptive.add_argument("--R", default=50, type=int, help="Number of repetitions for each method to estimate utility.")
     p_descriptive.add_argument("--epsilon_list", default=[round(i * 0.1, 1) for i in range(1, 10)], nargs="+", type=float, help="Privacy loss budget(s) for DP methods.")
     p_descriptive.set_defaults(func=do_mean)
+
+    p_descriptive = subparsers.add_parser("count", parents=[parent], help="Differential private count")
+    p_descriptive.add_argument("--variable", required=True, type=str, help="Variable to compute the descriptive statistic for.")
+    p_descriptive.add_argument("--R", default=50, type=int, help="Number of repetitions for each method to estimate utility.")
+    p_descriptive.add_argument("--epsilon_list", default=[round(i * 0.1, 1) for i in range(1, 10)], nargs="+", type=float, help="Privacy loss budget(s) for DP methods.")
+    p_descriptive.set_defaults(func=do_count)
 
     return parser.parse_args()
 
@@ -57,7 +63,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    run_id = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out = METHOD_DIR / "results" / args.dataset / run_id
     out.mkdir(parents=True, exist_ok=True)
 

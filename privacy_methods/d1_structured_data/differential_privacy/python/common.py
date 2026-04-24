@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 import pandas as pd
 from pathlib import Path
+import opendp.prelude as dp
+import logging
+from typing import Optional
+from pathlib import Path
 
 
 @dataclass
@@ -25,3 +29,24 @@ def write_benchmark_result(result: BenchmarkResult, out_dir: str):
 
         with open(file_path, "wb") as f:
             f.write(buf)
+
+def get_values(csv_path: Path, filter: Optional[str], variable: str):
+    dp.enable_features("contrib")
+
+    # Read and clean the numeric column you want to average
+    df = pd.read_csv(csv_path)
+    df = df.query(filter) if filter else df
+    logging.info(f"Read {len(df)} rows after filtering with query: {filter}")
+    values = (
+        pd.to_numeric(df[variable], errors="coerce")
+        .dropna()
+        .astype(float)
+        .tolist()
+    )
+    return values
+
+def check_bounds(values: list, bounds: tuple):
+    if min(values) < bounds[0]:
+        raise ValueError(f"Some actual values below lower bound {bounds[0]}")
+    if max(values) > bounds[1]:
+        raise ValueError(f"Some actual values above upper bound {bounds[1]}")

@@ -30,4 +30,8 @@ See `datasets/datasets.yaml` and dataset cards in `datasets/`.
 - Basic fairness checks: performance disparities across demographic subgroups (optional)
 
 ## How to run
+- Crete virtual environment, if not yet created:
+ `python3 -m venv .venv`
+- `source .venv/bin/activate`
+- `pip install -r privacy_methods/d1_structured_data/differential_privacy/code/python/requirements.txt`
 - `python run.py --help`

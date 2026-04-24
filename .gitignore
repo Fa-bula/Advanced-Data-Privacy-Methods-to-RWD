@@ -26,3 +26,5 @@ renv/library/
 # OS
 .DS_Store
 Thumbs.db
+
+.vscode/

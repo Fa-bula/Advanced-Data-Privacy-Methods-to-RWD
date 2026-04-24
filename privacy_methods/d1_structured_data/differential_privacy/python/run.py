@@ -45,8 +45,8 @@ def parse_args() -> argparse.Namespace:
     subparsers = parser.add_subparsers(dest="cmd", required=True)
 
     p_descriptive = subparsers.add_parser("mean", parents=[parent], help="Differential Private Mean value")
-    p_descriptive.add_argument("--variable", default="VALUE", type=str, help="Variable to compute the descriptive statistic for.")
-    p_descriptive.add_argument("--bounds", default=[140, 220], nargs=2, type=float, help="Public bounds for the descriptive statistic.")
+    p_descriptive.add_argument("--variable", required=True, type=str, help="Variable to compute the descriptive statistic for.")
+    p_descriptive.add_argument("--bounds", required=True, nargs=2, type=float, help="Public bounds for the descriptive statistic.")
     p_descriptive.add_argument("--R", default=50, type=int, help="Number of repetitions for each method to estimate utility.")
     p_descriptive.add_argument("--epsilon_list", default=[round(i * 0.1, 1) for i in range(1, 10)], nargs="+", type=float, help="Privacy loss budget(s) for DP methods.")
     p_descriptive.set_defaults(func=do_mean)

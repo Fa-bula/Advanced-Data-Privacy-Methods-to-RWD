@@ -27,9 +27,13 @@ def do_mean(args: argparse.Namespace) -> None:
         .astype(float)
         .tolist()
     )
-    actual_mean = sum(values) / len(values)
 
     bounds = tuple(args.bounds)
+    if min(values) < bounds[0]:
+        raise ValueError(f"Some actual values below lower bound {bounds[0]}")
+    if max(values) > bounds[1]:
+        raise ValueError(f"Some actual values above upper bound {bounds[1]}")
+    actual_mean = sum(values) / len(values)
     imputed_value = (bounds[0] + bounds[1]) / 2
     logging.info(f"Bounds for variable '{args.variable}': {args.bounds}, imputed value: {imputed_value}")
     results = []
@@ -61,7 +65,6 @@ def do_mean(args: argparse.Namespace) -> None:
 
             dp_counts.append(dp_count)
             dp_means.append(dp_mean)
-
         # Utility metrics for this epsilon
         abs_errors = [abs(x - actual_mean) for x in dp_means]
         sq_errors = [(x - actual_mean) ** 2 for x in dp_means]

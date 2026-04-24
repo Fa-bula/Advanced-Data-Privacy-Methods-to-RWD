@@ -14,7 +14,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
-def do_descriptive(args: argparse.Namespace) -> None:
+def do_mean(args: argparse.Namespace) -> None:
     dp.enable_features("contrib")
 
     # Read and clean the numeric column you want to average

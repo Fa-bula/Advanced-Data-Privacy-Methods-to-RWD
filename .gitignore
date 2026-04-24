@@ -27,4 +27,5 @@ renv/library/
 .DS_Store
 Thumbs.db
 
+# VS Code settings
 .vscode/

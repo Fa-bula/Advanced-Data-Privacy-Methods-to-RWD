@@ -1,0 +1,74 @@
+---
+title: "README"
+output: html_document
+---
+# Differential Privacy Pipeline for Structured Synthea Data in R
+
+## Overview
+
+This project implements a Differential Privacy (DP) pipeline in R using structured sample data from Synthea. The pipeline downloads the latest Synthea CSV sample data, builds a patient-level analytic mart, applies Differential Privacy mechanisms to selected summaries, and evaluates the privacy-utility tradeoff.
+
+The goal is to demonstrate how aggregate statistics and analysis outputs can be released with mathematically calibrated privacy protection while preserving useful analytical value.
+
+## Purpose
+
+This pipeline is designed to demonstrate Differential Privacy on structured healthcare-like data. Unlike traditional de-identification approaches that modify or suppress identifiers in a dataset, Differential Privacy protects released outputs by adding calibrated noise under a formal privacy budget.
+
+This project focuses on:
+- building a structured patient-level analytic mart from Synthea data
+- producing DP-protected summary outputs
+- comparing original and DP outputs
+- evaluating the privacy-utility tradeoff
+
+## Data Source
+
+The pipeline uses publicly available Synthea sample data from the Synthea sample-data repository on GitHub.
+
+The current implementation downloads the latest CSV sample ZIP from the `downloads/latest` directory.
+
+Key source tables used include:
+- patients
+- encounters
+- conditions
+- medications
+- procedures
+- observations
+
+## Pipeline Overview
+
+The R pipeline consists of six steps:
+
+1. `fetch_synthea.R`  
+   Downloads and extracts the latest Synthea CSV sample data.
+
+2. `analyze_synthea.R`  
+   Profiles the raw data and builds a patient-level analytic mart with bounded variables for DP analysis.
+
+3. `prepare_dp_queries.R`  
+   Defines the Differential Privacy release plan, including query types and privacy budget allocation.
+
+4. `apply_dp.R`  
+   Applies Differential Privacy mechanisms to counts, crosstabs, histograms, and bounded means.
+
+5. `evaluate_dp_privacy_utility.R`  
+   Evaluates privacy accounting and compares actual vs DP outputs.
+
+6. `run_dp_analyses.R`  
+   Runs utility analyses and produces comparison outputs for selected descriptive and modeling results.
+
+## Project Structure
+
+```text
+dp_synthea/
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── output/
+├── scripts/
+│   ├── fetch_synthea.R
+│   ├── analyze_synthea.R
+│   ├── prepare_dp_queries.R
+│   ├── apply_dp.R
+│   ├── evaluate_dp_privacy_utility.R
+│   └── run_dp_analyses.R
+└── README.md
